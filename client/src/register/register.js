@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import './register.css';
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 
 import CD from "../images/CD.svg"
 
@@ -12,6 +12,7 @@ import Footer from "../components/footer/footer";
 
 
 const Register = () => {
+    const navigate= useNavigate()
     const [user, setUser] = useState({
         name: '',
         email: '',
@@ -42,6 +43,33 @@ const Register = () => {
             }
         )
     }
+    const PostData=async(e)=>{
+        e.preventDefault();
+        const {name,email,mobile,password,state,district,address,pincode}=user;
+        
+        const res = await fetch("http://localhost:5000/api/v1/register",{
+             method:"POST",
+             headers:{
+                 "Content-Type":"application/json",
+                 'Accept': 'application/json'
+             },
+             body:JSON.stringify({
+                name,email,mobile,password,state,district,address,pincode
+             })
+        });
+        const data = await res.json(); //not seeing in the pending state
+        //data is valid or not -----
+        console.log(data);
+        if (data.status===400 ||!data){   //not found data or data not valid
+            window.alert("Invalid Registration");
+            console.log("Invalid Registration");
+        }else{
+            window.alert("Registration successful");
+            console.log("Successful Registration");
+
+            navigate("/")    //METHOD for redirecting into login page
+        }
+    }
     return (
         <div className='registerpage'>
             < Header2 />
@@ -58,11 +86,11 @@ const Register = () => {
                 <div className='rrightmain1'>
                     <div className='rrightcontent1'>
                         <h2 className='rheading31'>REGISTER</h2>
-                        <form className='rregistrationform' onSubmit={submitHandler} autoComplete="off">
+                        <form method='POST' className='rregistrationform' onSubmit={submitHandler} autoComplete="off">
                             <div className='rregistrationinputs'>
                                 <div className='rleftinputs' >
                                     <label className="rlabel1">Name</label><br />
-                                    <input type="text" onChange={changeHandler} name="firstname" required /><br />
+                                    <input type="text" onChange={changeHandler} name="name" required /><br />
                                     <label className="rlabel1">Email</label><br />
                                     <input type="email" onChange={changeHandler} name="email" required /><br />
                                     <label className="rlabel1">Password</label><br />
@@ -85,7 +113,7 @@ const Register = () => {
                             <div className='rcheck-box1'>
                                 <span className='rcheckboxtext'><img src={CD} alt="checkbox" /> I agree to Terms & Condition receiving marketing and promotional materials</span>
                             </div>
-                            <button type="submit" value="Login" className="rsignupbtn">Register</button>
+                            <button type="submit" value="Login" className="rsignupbtn" onClick={PostData}>Register</button>
                         </form>
                     </div>
                 </div>
