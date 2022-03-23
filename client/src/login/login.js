@@ -22,7 +22,7 @@ const Login = () => {
     }
     const submitHandler = (event) => {
         event.preventDefault();
-        axios.post("http://localhost:5000/api/v1/users/login", user).then(
+        axios.post("http://localhost:5000/api/v1/login", user).then(
             res => setToken(res.data.token)
         )
     }
@@ -46,7 +46,7 @@ const Login = () => {
                 </div>
                 <div className='lrightmain'>
                     <div className='lrightcontent'>
-                        <h2 className='lheading3'>SIGN IN</h2>
+                      <h2 className='lheading3'>SIGN IN</h2>
                         <form className="loginform" onSubmit={submitHandler} autoComplete="off">
                             <label className="email1">Email</label><br />
                             <input type="email" onChange={changeHandler} name="email" required /><br />
